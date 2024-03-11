@@ -44,14 +44,6 @@ const getRNPackageVersion = (() => {
 })();
 
 /**
- * Returns the version number of `@react-native-community/cli-platform-ios`.
- * @returns {number}
- */
-function cliPlatformIOSVersion() {
-  return getRNPackageVersion("@react-native-community/cli-platform-ios");
-}
-
-/**
  * Configures Gradle wrapper as necessary before the Android app is built.
  * @param {string} sourceDir
  */
@@ -168,21 +160,6 @@ function androidManifestPath(sourceDir) {
 }
 
 /**
- * @returns {string | undefined}
- */
-function iosProjectPath() {
-  const needsProjectPath = cliPlatformIOSVersion() < v(8, 0, 0);
-  if (needsProjectPath) {
-    // `sourceDir` and `podfile` detection was fixed in
-    // @react-native-community/cli-platform-ios v5.0.2 (see
-    // https://github.com/react-native-community/cli/pull/1444).
-    return "node_modules/.generated/ios/ReactTestApp.xcodeproj";
-  }
-
-  return undefined;
-}
-
-/**
  * @param {string} solutionFile
  * @returns {ProjectParams["windows"]["project"]}
  */
@@ -223,16 +200,7 @@ function configureProjects({ android, ios, windows }, fs = nodefs) {
   }
 
   if (ios) {
-    // `ios.sourceDir` was added in 8.0.0
-    // https://github.com/react-native-community/cli/commit/25eec7c695f09aea0ace7c0b591844fe8828ccc5
-    if (cliPlatformIOSVersion() >= v(8, 0, 0)) {
-      config.ios = ios;
-    }
-    const project = iosProjectPath();
-    if (project) {
-      config.ios = config.ios ?? {};
-      config.ios.project = project;
-    }
+    config.ios = ios;
   }
 
   if (windows && fs.existsSync(windows.solutionFile)) {
@@ -247,6 +215,5 @@ function configureProjects({ android, ios, windows }, fs = nodefs) {
   return config;
 }
 
-exports.cliPlatformIOSVersion = cliPlatformIOSVersion;
 exports.configureProjects = configureProjects;
 exports.internalForTestingPurposesOnly = { getAndroidPackageName };
