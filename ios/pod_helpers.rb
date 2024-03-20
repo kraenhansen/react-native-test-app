@@ -46,8 +46,7 @@ end
 
 def new_architecture_enabled?(options, react_native_version)
   supports_new_architecture = supports_new_architecture?(react_native_version)
-  supports_new_architecture && ENV.fetch('RCT_NEW_ARCH_ENABLED',
-                                         options[:fabric_enabled] || options[:turbomodule_enabled])
+  supports_new_architecture && ENV.fetch('RCT_NEW_ARCH_ENABLED', options[:fabric_enabled])
 end
 
 def platform_config(key, project_root, target_platform)
