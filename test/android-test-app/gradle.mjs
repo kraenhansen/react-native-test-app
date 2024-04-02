@@ -39,7 +39,6 @@ async function makeProject(name, platforms, setupFiles = {}) {
     testAppPath: fileURLToPath(new URL("../..", import.meta.url)),
     targetVersion: reactNativeVersion(),
     platforms,
-    flatten: true,
     force: true,
     init: true,
   });
@@ -120,7 +119,7 @@ function runGradle(cwd, ...args) {
  */
 export async function runGradleWithProject(name, platforms, setupFiles = {}) {
   const projectPath = await makeProject(name, platforms, setupFiles);
-  const result = runGradle(projectPath);
+  const result = runGradle(path.join(projectPath, "android"));
   const stdout = joinStrings(result.stdout);
   const stderr = joinStrings(result.stderr);
   if (result.stderr) {

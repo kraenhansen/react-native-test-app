@@ -286,7 +286,6 @@ function main() {
           testAppPath: fileURLToPath(new URL("..", import.meta.url)),
           targetVersion,
           platforms,
-          flatten: true,
           force: true,
           init: true,
         });

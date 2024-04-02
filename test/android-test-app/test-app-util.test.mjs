@@ -11,7 +11,7 @@ import {
 describe("test-app-util.gradle", () => {
   const buildGradle = [
     "buildscript {",
-    '    def androidTestAppDir = "node_modules/react-native-test-app/android"',
+    '    def androidTestAppDir = "../node_modules/react-native-test-app/android"',
     '    apply(from: "${androidTestAppDir}/dependencies.gradle")',
     '    apply(from: "${androidTestAppDir}/test-app-util.gradle")',
     "",
@@ -48,7 +48,7 @@ describe("test-app-util.gradle", () => {
         displayName: "AppDisplayName",
         resources: ["dist/res", "dist/main.android.jsbundle"],
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getAppName() = " + ext.getAppName())',
       ],
@@ -65,7 +65,7 @@ describe("test-app-util.gradle", () => {
         displayName: "AppDisplayName",
         resources: ["dist/res", "dist/main.android.jsbundle"],
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getApplicationId() = " + ext.getApplicationId())',
       ],
@@ -85,7 +85,7 @@ describe("test-app-util.gradle", () => {
         },
         resources: ["dist/res", "dist/main.android.jsbundle"],
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getApplicationId() = " + ext.getApplicationId())',
       ],
@@ -97,7 +97,7 @@ describe("test-app-util.gradle", () => {
 
   it("getPackageVersionNumber() returns `react-native` version as a number", async () => {
     const { status, stdout } = await runGradle({
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getPackageVersionNumber() = " + ext.getPackageVersionNumber("react-native", rootDir))',
       ],
@@ -114,11 +114,11 @@ describe("test-app-util.gradle", () => {
 
   it("getPackageVersionNumber() handles pre-release identifiers", async () => {
     const { status, stdout } = await runGradle({
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getPackageVersionNumber() = " + ext.getPackageVersionNumber("react-native", file("${rootDir}/pre-release-version")))',
       ],
-      "pre-release-version/node_modules/react-native/package.json":
+      "android/pre-release-version/node_modules/react-native/package.json":
         JSON.stringify({ name: "react-native", version: "1.2.3-053c2b4be" }),
     });
 
@@ -134,7 +134,7 @@ describe("test-app-util.gradle", () => {
         resources: ["dist/res", "dist/main.android.jsbundle"],
         android: { signingConfigs: { debug: {} } },
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getSigningConfigs() = " + ext.getSigningConfigs())',
       ],
@@ -152,7 +152,7 @@ describe("test-app-util.gradle", () => {
         resources: ["dist/res", "dist/main.android.jsbundle"],
         android: { signingConfigs: {} },
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getSigningConfigs() = " + ext.getSigningConfigs())',
       ],
@@ -176,7 +176,7 @@ describe("test-app-util.gradle", () => {
           },
         },
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getSigningConfigs() = " + ext.getSigningConfigs())',
       ],
@@ -203,7 +203,7 @@ describe("test-app-util.gradle", () => {
           },
         },
       }),
-      "build.gradle": [
+      "android/build.gradle": [
         ...buildGradle,
         'println("getSigningConfigs() = " + ext.getSigningConfigs())',
       ],
