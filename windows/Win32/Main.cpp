@@ -6,9 +6,10 @@
 #include "Manifest.g.cpp"
 #include "ReactInstance.h"
 
+#define MAKE_VERSION(maj, min, patch) ((maj * 1000000) + (min * 1000) + patch)
+
 namespace winrt
 {
-    using winrt::Microsoft::ReactNative::CompositionRootView;
     using winrt::Microsoft::ReactNative::IJSValueWriter;
     using winrt::Microsoft::ReactNative::ReactCoreInjection;
     using winrt::Microsoft::ReactNative::ReactViewOptions;
@@ -22,6 +23,12 @@ namespace winrt
     using winrt::Microsoft::UI::Windowing::OverlappedPresenterState;
     using winrt::Windows::Foundation::AsyncStatus;
     using winrt::Windows::Foundation::Size;
+
+#if REACT_NATIVE_VERSION == 0 || REACT_NATIVE_VERSION >= MAKE_VERSION(0, 75, 0)
+    using ReactNativeIsland = winrt::Microsoft::ReactNative::ReactNativeIsland;
+#else
+    using ReactNativeIsland = winrt::Microsoft::ReactNative::CompositionRootView;
+#endif  // REACT_NATIVE_VERSION == 0 || REACT_NATIVE_VERSION >= MAKE_VERSION(0, 75, 0)
 }  // namespace winrt
 
 namespace
@@ -38,7 +45,7 @@ namespace
         return GetDpiForWindow(hwnd) / static_cast<float>(USER_DEFAULT_SCREEN_DPI);
     }
 
-    void UpdateRootViewSizeToAppWindow(winrt::CompositionRootView const &rootView,
+    void UpdateRootViewSizeToAppWindow(winrt::ReactNativeIsland const &rootView,
                                        winrt::AppWindow const &window)
     {
         // Do not relayout when minimized
@@ -138,7 +145,7 @@ _Use_decl_annotations_ int CALLBACK WinMain(HINSTANCE /* instance */,
         viewOptions = MakeReactViewOptions(component);
     }
 
-    auto rootView = winrt::CompositionRootView{compositor};
+    auto rootView = winrt::ReactNativeIsland{compositor};
     rootView.ReactViewHost(
         winrt::ReactCoreInjection::MakeViewHost(instance.ReactHost(), viewOptions));
 
